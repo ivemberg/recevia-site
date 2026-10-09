@@ -107,19 +107,19 @@
     <section class="card">
       <div class="eyebrow">Recevia</div>
       <h1>Privacy Policy</h1>
-      <p class="meta">Last updated: March 18, 2026</p>
+      <p class="meta">Last updated: October 9, 2026</p>
 
-      <p>This Privacy Policy explains how Recevia handles information when you use the app.</p>
+      <p>This Privacy Policy explains how Recevia handles information when you use the app on iPhone, Apple Watch or Android.</p>
 
       <h2>Summary</h2>
       <ul>
         <li>Recevia is designed to work primarily on your device.</li>
         <li>We do not use third-party advertising SDKs.</li>
-        <li>We do not use third-party analytics SDKs.</li>
+        <li>We do not use third-party analytics SDKs. On Android, the Google ML Kit libraries that read receipts send Google technical diagnostics, described below; they never send your receipt content.</li>
         <li>We do not track you across apps or websites.</li>
         <li>We do not operate a custom backend that receives your receipt content.</li>
         <li>Your trips, receipt metadata, and receipt images are stored locally on your device.</li>
-        <li>If you enable iCloud on your device, Recevia may mirror app data to your personal iCloud storage to keep your data available across your devices.</li>
+        <li>On iPhone, if you enable iCloud on your device, Recevia may mirror app data to your personal iCloud storage to keep your data available across your devices. The Android app has no sync.</li>
       </ul>
 
       <h2>Information Stored by the App</h2>
@@ -135,11 +135,15 @@
       <h2>Camera and Photo Library</h2>
       <p>Recevia requests access to the camera so you can capture receipt images.</p>
       <p>Recevia uses the photo library picker only so you can import receipt images you choose manually.</p>
-      <p>Receipt images remain stored on your device unless your device later syncs them to your personal iCloud storage.</p>
+      <p>Receipt images remain stored on your device unless, on iPhone, your device later syncs them to your personal iCloud storage.</p>
 
       <h2>OCR Processing</h2>
       <p>Recevia performs optical character recognition (OCR) on-device to help prefill receipt details such as merchant, total amount, date, and category.</p>
       <p>OCR results are stored locally as part of the receipt record.</p>
+
+      <h2>Google ML Kit on Android</h2>
+      <p>On Android, scanning, text recognition, language identification and translation of receipts are done on your device by Google ML Kit. The scanner and the language models are downloaded by Google Play services the first time they are needed. Receipt images and their text are not sent to Google or to us.</p>
+      <p>Like every app using ML Kit, Recevia lets these libraries send Google technical diagnostics: device model and operating system version, app package and version, performance metrics, a per-installation identifier, the library configuration, events such as initialisation and model downloads, error codes and, for language identification and translation, the languages involved. Google uses this to deliver and maintain the libraries; it is sent over HTTPS. See <a href="https://developers.google.com/ml-kit/android-data-disclosure">Google's ML Kit data disclosure</a>.</p>
 
       <h2>iCloud Sync</h2>
       <p>If iCloud is available on your device, Recevia may mirror app files to your personal iCloud container.</p>
@@ -149,11 +153,11 @@
       <h2>Data Sharing</h2>
       <p>Recevia does not sell your personal data.</p>
       <p>Recevia does not share your receipt content with advertising networks or third-party analytics providers.</p>
-      <p>Recevia only shares data when you explicitly choose to do so, for example when you export and share a PDF using the iOS share sheet.</p>
+      <p>Recevia only shares data when you explicitly choose to do so, for example when you export and share a PDF using the iOS or Android share sheet.</p>
 
       <h2>Data Retention and Deletion</h2>
       <p>Your data remains on your device until you delete it.</p>
-      <p>You can delete individual receipts or complete trips, including related receipts and stored images.</p>
+      <p>You can delete individual receipts or complete trips, including related receipts and stored images. Uninstalling the app removes everything it stored on the device.</p>
 
       <h2>Children’s Privacy</h2>
       <p>Recevia is not directed to children.</p>
