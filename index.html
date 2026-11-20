@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recevia – Nota spese e scontrini di trasferta</title>
+  <meta name="description" content="Recevia organizza gli scontrini di trasferta: crei un viaggio, fotografi gli scontrini, controlli i dati rilevati ed esporti un PDF per la nota spese. Per iPhone e Android.">
+  <link rel="alternate" hreflang="en" href="https://ivemberg.github.io/recevia-site/home.html">
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f5f7fb;
+      --surface: #ffffff;
+      --surface-secondary: #f0f5ff;
+      --text: #162033;
+      --muted: #5f6b7c;
+      --border: #dde3ee;
+      --accent: #1987f5;
+      --accent-orange: #f7952b;
+      --accent-green: #33b36b;
+      --shadow: rgba(22, 32, 51, 0.08);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d0d0d;
+        --surface: #1c1c1e;
+        --surface-secondary: #232327;
+        --text: #f2f2f7;
+        --muted: #98989f;
+        --border: #38383a;
+        --accent: #409cff;
+        --accent-orange: #ffaf52;
+        --accent-green: #44d17a;
+        --shadow: rgba(0, 0, 0, 0.32);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(25, 135, 245, 0.08), transparent 28%),
+        radial-gradient(circle at top left, rgba(51, 179, 107, 0.08), transparent 26%),
+        linear-gradient(180deg, color-mix(in srgb, var(--bg) 84%, var(--surface)) 0%, var(--bg) 100%);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .container {
+      width: min(1100px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 22px 0;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), color-mix(in srgb, var(--accent) 58%, white));
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 20px;
+      box-shadow: 0 12px 24px var(--shadow);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, 0.95fr);
+      gap: 28px;
+      align-items: center;
+      padding: 28px 0 48px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 14px;
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    h1, h2, h3 {
+      line-height: 1.12;
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 5.8vw, 4.8rem);
+      margin-bottom: 16px;
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3.5vw, 2.7rem);
+      margin-bottom: 14px;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+
+    .hero-copy p,
+    .section-copy,
+    .feature-card p,
+    .coverage-card p,
+    .faq-card p,
+    .footer p {
+      color: var(--muted);
+      font-size: 1.02rem;
+      margin: 0;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      text-decoration: none;
+      box-shadow: 0 14px 26px var(--shadow);
+    }
+
+    .button:hover {
+      text-decoration: none;
+    }
+
+    .button-primary {
+      background: var(--accent);
+      border-color: color-mix(in srgb, var(--accent) 88%, black);
+      color: white;
+    }
+
+    .hero-panel,
+    .section-panel,
+    .feature-card,
+    .coverage-card,
+    .faq-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      box-shadow: 0 22px 42px var(--shadow);
+    }
+
+    .hero-panel {
+      padding: 22px;
+    }
+
+    .trip-card {
+      border-radius: 24px;
+      overflow: hidden;
+      background: var(--surface-secondary);
+      border: 1px solid color-mix(in srgb, var(--border) 85%, var(--accent));
+    }
+
+    .trip-map {
+      min-height: 180px;
+      padding: 20px;
+      background:
+        radial-gradient(circle at 78% 18%, rgba(255,255,255,0.92), transparent 34%),
+        linear-gradient(135deg, rgba(25, 135, 245, 0.16), rgba(255,255,255,0.98));
+      position: relative;
+    }
+
+    .trip-map::before,
+    .trip-map::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: rgba(95, 107, 124, 0.12);
+      border-radius: 999px;
+    }
+
+    .trip-map::before {
+      top: 42px;
+      transform: rotate(2deg);
+    }
+
+    .trip-map::after {
+      top: 92px;
+      transform: rotate(-2deg);
+    }
+
+    .trip-city {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .trip-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .trip-dots span {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: rgba(25, 135, 245, 0.72);
+    }
+
+    .trip-dots span:nth-child(2) {
+      background: rgba(214, 106, 242, 0.9);
+    }
+
+    .trip-body {
+      padding: 20px;
+    }
+
+    .trip-label {
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .trip-title {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 10px 0 8px;
+    }
+
+    .trip-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .trip-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .avatars {
+      display: flex;
+      gap: 0;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--surface);
+      margin-right: -8px;
+      background: rgba(25, 135, 245, 0.16);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .stat-card {
+      border-radius: 20px;
+      padding: 18px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .stat-card small {
+      display: block;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-card strong {
+      font-size: 1.7rem;
+      line-height: 1;
+    }
+
+    .sections {
+      display: grid;
+      gap: 24px;
+      padding-bottom: 40px;
+    }
+
+    .section-panel {
+      padding: 30px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .feature-card {
+      padding: 22px;
+    }
+
+    .feature-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+      font-size: 20px;
+    }
+
+    .feature-icon.blue {
+      background: rgba(25, 135, 245, 0.12);
+      color: var(--accent);
+    }
+
+    .feature-icon.orange {
+      background: rgba(247, 149, 43, 0.14);
+      color: var(--accent-orange);
+    }
+
+    .feature-icon.green {
+      background: rgba(51, 179, 107, 0.14);
+      color: var(--accent-green);
+    }
+
+    .coverage-grid,
+    .faq-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+
+    .coverage-card,
+    .faq-card {
+      padding: 22px;
+    }
+
+    .coverage-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      color: var(--accent-green);
+      background: rgba(51, 179, 107, 0.12);
+      border-radius: 999px;
+      padding: 8px 12px;
+      margin-bottom: 12px;
+    }
+
+    .footer {
+      padding: 20px 0 56px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .features,
+      .coverage-grid,
+      .faq-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .stats {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .container {
+        width: min(100%, calc(100% - 24px));
+      }
+
+      .section-panel,
+      .hero-panel,
+      .feature-card,
+      .coverage-card,
+      .faq-card {
+        padding: 22px;
+      }
+
+      .trip-footer {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .hero-actions,
+      .nav-links {
+        width: 100%;
+      }
+
+      .nav-links {
+        justify-content: flex-start;
+        flex-wrap: wrap;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+
+    .more { margin-top: 10px; }
+    .more a { white-space: nowrap; }
+  </style>
+</head>
+<body>
+  <header class="container">
+    <nav class="nav">
+      <a class="brand" href="./">
+        <span class="brand-mark">R</span>
+        <span>Recevia</span>
+      </a>
+      <div class="nav-links">
+        <a href="#funzioni">Funzioni</a>
+        <a href="#viaggi">Ovunque</a>
+        <a href="./support.html">Supporto</a>
+        <a href="./privacy.html">Privacy</a>
+        <a href="./home.html" hreflang="en" lang="en">English</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="eyebrow">Scontrini di trasferta</div>
+        <h1>Scontrini, totali e note spese in un posto solo.</h1>
+        <p>
+          Crea un viaggio, aggiungi le foto degli scontrini, controlla i dati rilevati
+          ed esporta un PDF ordinato, pronto per la nota spese o per l'amministrazione.
+        </p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="https://apps.apple.com/it/app/recevia/id6760703339">Scarica su App Store</a>
+          <a class="button" href="https://play.google.com/store/apps/details?id=com.ivemberg.recevia">Scarica su Google Play</a>
+        </div>
+      </div>
+
+      <div class="hero-panel">
+        <div class="trip-card">
+          <div class="trip-map">
+            <div class="trip-city">
+              <div style="font-size: 2rem; font-weight: 800;">Tokyo</div>
+              <div class="trip-dots">
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="trip-body">
+            <div class="trip-label">Prossimo viaggio</div>
+            <div class="trip-title">Trasferta a Tokyo</div>
+            <div class="trip-meta">28/02/26 – 11/03/26</div>
+
+            <div class="trip-footer">
+              <div class="avatars">
+                <span class="avatar">👤</span>
+                <span class="avatar">👤</span>
+              </div>
+              <span class="button button-primary" style="width:auto;">Dettagli</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stats">
+          <div class="stat-card">
+            <small>Viaggi</small>
+            <strong>3</strong>
+          </div>
+          <div class="stat-card">
+            <small>Scontrini</small>
+            <strong>26</strong>
+          </div>
+          <div class="stat-card">
+            <small>Totale rilevato</small>
+            <strong>¥42k</strong>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="sections">
+      <section class="section-panel" id="funzioni">
+        <div class="eyebrow">Funzioni</div>
+        <h2>Fatta per la nota spese di tutti i giorni.</h2>
+        <p class="section-copy">
+          Recevia fa poche cose e le fa bene: crei un viaggio, raccogli gli scontrini,
+          controlli i dati rilevati ed esporti un report pulito, senza complicazioni.
+        </p>
+
+        <div class="features">
+          <article class="feature-card">
+            <div class="feature-icon blue">✈️</div>
+            <h3>Viaggi in ordine</h3>
+            <p>Nome, date, scontrini e totali di ogni viaggio in un posto solo. I viaggi finiti si archiviano e restano consultabili.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon orange">🧾</div>
+            <h3>Scontrini letti da soli</h3>
+            <p>Dalla fotocamera o dalla libreria foto: Recevia rileva esercente, importo, data e categoria, e tu correggi quello che serve.</p>
+          </article>
+          <article class="feature-card">
+            <div class="feature-icon green">📄</div>
+            <h3>PDF pronti da mandare</h3>
+            <p>Report ordinati da condividere con l'amministrazione, il responsabile o per il rimborso.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-panel" id="viaggi">
+        <div class="eyebrow">In Italia e all'estero</div>
+        <h2>Per gli scontrini raccolti in viaggio, ovunque.</h2>
+        <p class="section-copy">
+          Recevia riconosce scontrini in formati e valute diverse, anche giapponesi e cinesi,
+          e l'app parla 12 lingue, dall'italiano al coreano.
+        </p>
+
+        <div class="coverage-grid">
+          <article class="coverage-card">
+            <div class="coverage-pill">Trasferte in tutto il mondo</div>
+            <h3>Dove ti porta il lavoro</h3>
+            <p>
+              Non è legata a una città o a un paese: viaggi in Italia e all'estero
+              stanno nella stessa app, con i loro scontrini e i loro report.
+            </p>
+          </article>
+
+          <article class="coverage-card">
+            <div class="coverage-pill">Valute diverse</div>
+            <h3>Euro, dollari, yen e altre</h3>
+            <p>
+              Riconosce formati e valute come EUR, USD, JPY, CNY, KRW, SGD, HKD e TWD.
+              Quando la lettura non è perfetta, correggi a mano.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-panel">
+        <div class="eyebrow">Come funziona</div>
+        <h2>Semplice, sul tuo telefono, pronta da condividere.</h2>
+        <div class="faq-grid">
+          <article class="faq-card">
+            <h3>I dati restano sul telefono</h3>
+            <p>
+              Viaggi, scontrini e foto stanno prima di tutto sul tuo dispositivo.
+              Su iPhone, se vuoi, iCloud li copia sui dispositivi con lo stesso Apple Account.
+            </p>
+          </article>
+
+          <article class="faq-card">
+            <h3>Lettura sul dispositivo</h3>
+            <p>
+              Le foto degli scontrini sono analizzate sul telefono per trovare esercente,
+              data, totale e categoria, prima che tu controlli il risultato.
+            </p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container footer">
+    <p>
+      Recevia di Ivo Bettini ·
+      <a href="./support.html">Supporto</a> ·
+      <a href="./privacy.html">Privacy</a> ·
+      <a href="./home.html" hreflang="en" lang="en">English</a>
+    </p>
+    <p class="more">Altre app di Ivemberg: <a href="https://ivemberg.github.io/haipagato/">Hai pagato?</a> · <a href="https://ivemberg.github.io/tesserarius/">Tesserarius</a> · <a href="https://ivemberg.github.io/lullabox/">Lullabox</a> · <a href="https://www.slottami.it">Slottami</a></p>
+  </footer>
+</body>
+</html>
